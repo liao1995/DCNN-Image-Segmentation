@@ -1,0 +1,975 @@
+name: "LIAONet"
+layer {
+  name: "data"
+  type: "ImageData"
+  top: "data"
+  top: "unuse"
+  transform_param {
+    mean_file: "train_mean.binaryproto"
+  }
+  image_data_param {
+    source: "list"
+    batch_size: 1
+    root_folder: "image/"
+  }
+}
+# convolutional layer 1 
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  param { # weight
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param { # bias
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 4
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    weight_filler {
+      type: "msra"
+      variance_norm: FAN_IN
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+# batch normalization 1
+layer {
+  name: "conv1_bn"
+  type: "BatchNorm"
+  bottom: "conv1"
+  top: "conv1_bn" 
+  param {
+    decay_mult: 0
+  }
+  param {
+    decay_mult: 0
+  }
+}
+# prelu layer 1
+layer {
+  name: "conv1_prelu"
+  type: "PReLU"
+  bottom: "conv1_bn"
+  top: "conv1_bn"
+  param {
+    decay_mult: 0
+  }
+  prelu_param {
+    filler {
+      value: 0.1
+      type: "constant"
+    }
+  }
+}
+# pooling layer 1
+layer {
+  name: "pool1"
+  type: "Pooling"
+  bottom: "conv1_bn"
+  top: "pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+# convolution layer 2
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "pool1"
+  top: "conv2"
+  param { # weight
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param { # bias
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 8
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    weight_filler {
+      type: "msra"
+      variance_norm: FAN_IN
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+# batch normalization 2
+layer {
+  name: "conv2_bn"
+  type: "BatchNorm"
+  bottom: "conv2"
+  top: "conv2_bn" 
+  param {
+    decay_mult: 0
+  }
+  param {
+    decay_mult: 0
+  }
+}
+# prelu layer 2
+layer {
+  name: "conv2_prelu"
+  type: "PReLU"
+  bottom: "conv2_bn"
+  top: "conv2_bn"
+  param {
+    decay_mult: 0
+  }
+  prelu_param {
+    filler {
+      value: 0.1
+      type: "constant"
+    }
+  }
+}
+# pooling layer 2
+layer {
+  name: "pool2"
+  type: "Pooling"
+  bottom: "conv2_bn"
+  top: "pool2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+# convolution layer 3
+layer {
+  name: "conv3"
+  type: "Convolution"
+  bottom: "pool2"
+  top: "conv3"
+  param { # weight
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param { # bias
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 16
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    weight_filler {
+      type: "msra"
+      variance_norm: FAN_IN
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+# batch normalization 3
+layer {
+  name: "conv3_bn"
+  type: "BatchNorm"
+  bottom: "conv3"
+  top: "conv3_bn" 
+  param {
+    decay_mult: 0
+  }
+  param {
+    decay_mult: 0
+  }
+}
+# prelu layer 3
+layer {
+  name: "conv3_prelu"
+  type: "PReLU"
+  bottom: "conv3_bn"
+  top: "conv3_bn"
+  param {
+    decay_mult: 0
+  }
+  prelu_param {
+    filler {
+      value: 0.1
+      type: "constant"
+    }
+  }
+}
+# pooling layer 3
+layer {
+  name: "pool3"
+  type: "Pooling"
+  bottom: "conv3_bn"
+  top: "pool3"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+# convolution layer 4
+layer {
+  name: "conv4"
+  type: "Convolution"
+  bottom: "pool3"
+  top: "conv4"
+  param { # weight
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param { # bias
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 32
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    weight_filler {
+      type: "msra"
+      variance_norm: FAN_IN
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+# batch normalization 4
+layer {
+  name: "conv4_bn"
+  type: "BatchNorm"
+  bottom: "conv4"
+  top: "conv4_bn" 
+  param {
+    decay_mult: 0
+  }
+  param {
+    decay_mult: 0
+  }
+}
+# prelu layer 4
+layer {
+  name: "conv4_prelu"
+  type: "PReLU"
+  bottom: "conv4_bn"
+  top: "conv4_bn"
+  param {
+    decay_mult: 0
+  }
+  prelu_param {
+    filler {
+      value: 0.1
+      type: "constant"
+    }
+  }
+}
+# pooling layer 4
+layer {
+  name: "pool4"
+  type: "Pooling"
+  bottom: "conv4_bn"
+  top: "pool4"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+# convolution layer 5
+layer {
+  name: "conv5"
+  type: "Convolution"
+  bottom: "pool4"
+  top: "conv5"
+  param { # weight
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param { # bias
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 64
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    weight_filler {
+      type: "msra"
+      variance_norm: FAN_IN
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+# batch normalization 5
+layer {
+  name: "conv5_bn"
+  type: "BatchNorm"
+  bottom: "conv5"
+  top: "conv5_bn" 
+  param {
+    decay_mult: 0
+  }
+  param {
+    decay_mult: 0
+  }
+}
+# prelu layer 5
+layer {
+  name: "conv5_prelu"
+  type: "PReLU"
+  bottom: "conv5_bn"
+  top: "conv5_bn"
+  param {
+    decay_mult: 0
+  }
+  prelu_param {
+    filler {
+      value: 0.1
+      type: "constant"
+    }
+  }
+}
+# pooling layer 5
+layer {
+  name: "pool5"
+  type: "Pooling"
+  bottom: "conv5_bn"
+  top: "pool5"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+# convolution layer 6
+layer {
+  name: "conv6"
+  type: "Convolution"
+  bottom: "pool5"
+  top: "conv6"
+  param { # weight
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param { # bias
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 128
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    weight_filler {
+      type: "msra"
+      variance_norm: FAN_IN
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+# batch normalization 6
+layer {
+  name: "conv6_bn"
+  type: "BatchNorm"
+  bottom: "conv6"
+  top: "conv6_bn" 
+  param {
+    decay_mult: 0
+  }
+  param {
+    decay_mult: 0
+  }
+}
+# prelu layer 6
+layer {
+  name: "conv6_prelu"
+  type: "PReLU"
+  bottom: "conv6_bn"
+  top: "conv6_bn"
+  param {
+    decay_mult: 0
+  }
+  prelu_param {
+    filler {
+      value: 0.1
+      type: "constant"
+    }
+  }
+}
+# pooling layer 6
+layer {
+  name: "pool6"
+  type: "Pooling"
+  bottom: "conv6_bn"
+  top: "pool6"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+# convolution layer 7
+layer {
+  name: "conv7"
+  type: "Convolution"
+  bottom: "pool6"
+  top: "conv7"
+  param { # weight
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param { # bias
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 256
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    weight_filler {
+      type: "msra"
+      variance_norm: FAN_IN
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+# batch normalization 7
+layer {
+  name: "conv7_bn"
+  type: "BatchNorm"
+  bottom: "conv7"
+  top: "conv7_bn" 
+  param {
+    decay_mult: 0
+  }
+  param {
+    decay_mult: 0
+  }
+}
+# prelu layer 7
+layer {
+  name: "conv7_prelu"
+  type: "PReLU"
+  bottom: "conv7_bn"
+  top: "conv7_bn"
+  param {
+    decay_mult: 0
+  }
+  prelu_param {
+    filler {
+      value: 0.1
+      type: "constant"
+    }
+  }
+}
+# pooling layer 7
+layer {
+  name: "pool7"
+  type: "Pooling"
+  bottom: "conv7_bn"
+  top: "pool7"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+# fc
+layer {
+  name: "fc"
+  type: "Convolution"
+  bottom: "pool7"
+  top: "fc"
+  param { # weight
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param { # bias
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 1024
+    kernel_size: 4
+    stride: 4
+    weight_filler {
+      type: "msra"
+      variance_norm: FAN_IN
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+# batch normalization fc
+layer {
+  name: "fc_bn"
+  type: "BatchNorm"
+  bottom: "fc"
+  top: "fc_bn" 
+  param {
+    decay_mult: 0
+  }
+  param {
+    decay_mult: 0
+  }
+}
+# prelu layer fc
+layer {
+  name: "fc_prelu"
+  type: "PReLU"
+  bottom: "fc_bn"
+  top: "fc_bn"
+  param {
+    decay_mult: 0
+  }
+  prelu_param {
+    filler {
+      value: 0.1
+      type: "constant"
+    }
+  }
+}
+# drop out
+layer {
+  name: "drop"
+  type: "Dropout"
+  bottom: "fc_bn"
+  top: "fc_bn"
+  dropout_param {
+    dropout_ratio: 0.1
+  }
+}
+# deconvolution fc
+layer {
+  name: "deconv_fc"
+  type: "Deconvolution"
+  bottom: "fc_bn"
+  top: "deconv_fc"
+  convolution_param {
+    num_output: 256
+    kernel_size: 8 # (2 * factor - factor % 2) 
+    stride: 4 # (factor)
+    pad: 2 # {{ceil((factor - 1) / 2.)}}
+    weight_filler: { 
+      type: "bilinear" 
+    } 
+    bias_term: false
+  }
+}
+# batch normalization deconv-fc
+layer {
+  name: "deconv_fc_bn"
+  type: "BatchNorm"
+  bottom: "deconv_fc"
+  top: "deconv_fc_bn" 
+  param {
+    decay_mult: 0
+  }
+  param {
+    decay_mult: 0
+  }
+}
+# prelu layer deconv-fc
+layer {
+  name: "deconv_fc_prelu"
+  type: "PReLU"
+  bottom: "deconv_fc_bn"
+  top: "deconv_fc_bn"
+  param {
+    decay_mult: 0
+  }
+  prelu_param {
+    filler {
+      value: 0.1
+      type: "constant"
+    }
+  }
+}
+# deconvolution layer 7
+layer {
+  name: "deconv7"
+  type: "Deconvolution"
+  bottom: "deconv_fc_bn"
+  top: "deconv7"
+  convolution_param {
+    num_output: 128
+    kernel_size: 4 # (2 * factor - factor % 2) 
+    stride: 2 # (factor)
+    pad: 1 # {{ceil((factor - 1) / 2.)}}
+    weight_filler: { 
+      type: "bilinear" 
+    } 
+    bias_term: false
+  }
+}
+# batch normalization deconv7
+layer {
+  name: "deconv7_bn"
+  type: "BatchNorm"
+  bottom: "deconv7"
+  top: "deconv7_bn"
+  param {
+    decay_mult: 0
+  }
+  param {
+    decay_mult: 0
+  } 
+}
+# prelu layer deconv7
+layer {
+  name: "deconv7_prelu"
+  type: "PReLU"
+  bottom: "deconv7_bn"
+  top: "deconv7_bn"
+  param {
+    decay_mult: 0
+  }
+  prelu_param {
+    filler {
+      value: 0.1
+      type: "constant"
+    }
+  }
+}
+# deconvolution layer 6
+layer {
+  name: "deconv6"
+  type: "Deconvolution"
+  bottom: "deconv7_bn"
+  top: "deconv6"
+  convolution_param {
+    num_output: 64
+    kernel_size: 4 
+    stride: 2 
+    pad: 1 
+    weight_filler: { 
+      type: "bilinear" 
+    } 
+    bias_term: false
+  }
+}
+# batch normalization deconv6
+layer {
+  name: "deconv6_bn"
+  type: "BatchNorm"
+  bottom: "deconv6"
+  top: "deconv6_bn"
+  param {
+    decay_mult: 0
+  }
+  param {
+    decay_mult: 0
+  } 
+}
+# prelu layer deconv6
+layer {
+  name: "deconv6_prelu"
+  type: "PReLU"
+  bottom: "deconv6_bn"
+  top: "deconv6_bn"
+  param {
+    decay_mult: 0
+  }
+  prelu_param {
+    filler {
+      value: 0.1
+      type: "constant"
+    }
+  }
+}
+# deconvolution layer 5
+layer {
+  name: "deconv5"
+  type: "Deconvolution"
+  bottom: "deconv6_bn"
+  top: "deconv5"
+  convolution_param {
+    num_output: 32
+    kernel_size: 4 
+    stride: 2 
+    pad: 1 
+    weight_filler: { 
+      type: "bilinear" 
+    } 
+    bias_term: false
+  }
+}
+# batch normalization deconv5
+layer {
+  name: "deconv5_bn"
+  type: "BatchNorm"
+  bottom: "deconv5"
+  top: "deconv5_bn"
+  param {
+    decay_mult: 0
+  }
+  param {
+    decay_mult: 0
+  } 
+}
+# prelu layer deconv5
+layer {
+  name: "deconv5_prelu"
+  type: "PReLU"
+  bottom: "deconv5_bn"
+  top: "deconv5_bn"
+  param {
+    decay_mult: 0
+  }
+  prelu_param {
+    filler {
+      value: 0.1
+      type: "constant"
+    }
+  }
+}
+# deconvolution layer 4
+layer {
+  name: "deconv4"
+  type: "Deconvolution"
+  bottom: "deconv5_bn"
+  top: "deconv4"
+  convolution_param {
+    num_output: 16
+    kernel_size: 4 
+    stride: 2 
+    pad: 1 
+    weight_filler: { 
+      type: "bilinear" 
+    } 
+    bias_term: false
+  }
+}
+# batch normalization deconv4
+layer {
+  name: "deconv4_bn"
+  type: "BatchNorm"
+  bottom: "deconv4"
+  top: "deconv4_bn"
+  param {
+    decay_mult: 0
+  }
+  param {
+    decay_mult: 0
+  } 
+}
+# prelu layer deconv4
+layer {
+  name: "deconv4_prelu"
+  type: "PReLU"
+  bottom: "deconv4_bn"
+  top: "deconv4_bn"
+  param {
+    decay_mult: 0
+  }
+  prelu_param {
+    filler {
+      value: 0.1
+      type: "constant"
+    }
+  }
+}
+# deconvolution layer 3
+layer {
+  name: "deconv3"
+  type: "Deconvolution"
+  bottom: "deconv4_bn"
+  top: "deconv3"
+  convolution_param {
+    num_output: 8
+    kernel_size: 4 
+    stride: 2 
+    pad: 1 
+    weight_filler: { 
+      type: "bilinear" 
+    } 
+    bias_term: false
+  }
+}
+# batch normalization deconv3
+layer {
+  name: "deconv3_bn"
+  type: "BatchNorm"
+  bottom: "deconv3"
+  top: "deconv3_bn"
+  param {
+    decay_mult: 0
+  }
+  param {
+    decay_mult: 0
+  } 
+}
+# prelu layer deconv3
+layer {
+  name: "deconv3_prelu"
+  type: "PReLU"
+  bottom: "deconv3_bn"
+  top: "deconv3_bn"
+  param {
+    decay_mult: 0
+  }
+  prelu_param {
+    filler {
+      value: 0.1
+      type: "constant"
+    }
+  }
+}
+# deconvolution layer 2
+layer {
+  name: "deconv2"
+  type: "Deconvolution"
+  bottom: "deconv3_bn"
+  top: "deconv2"
+  convolution_param {
+    num_output: 4
+    kernel_size: 4 
+    stride: 2 
+    pad: 1 
+    weight_filler: { 
+      type: "bilinear" 
+    } 
+    bias_term: false
+  }
+}
+# batch normalization deconv2
+layer {
+  name: "deconv2_bn"
+  type: "BatchNorm"
+  bottom: "deconv2"
+  top: "deconv2_bn"
+  param {
+    decay_mult: 0
+  }
+  param {
+    decay_mult: 0
+  } 
+}
+# prelu layer deconv2
+layer {
+  name: "deconv2_prelu"
+  type: "PReLU"
+  bottom: "deconv2_bn"
+  top: "deconv2_bn"
+  param {
+    decay_mult: 0
+  }
+  prelu_param {
+    filler {
+      value: 0.1
+      type: "constant"
+    }
+  }
+}
+# deconvolution layer 1
+layer {
+  name: "deconv1"
+  type: "Deconvolution"
+  bottom: "deconv2_bn"
+  top: "deconv1"
+  convolution_param {
+    num_output: 2
+    kernel_size: 4
+    stride: 2 
+    pad: 1 
+    weight_filler: { 
+      type: "bilinear" 
+    } 
+    bias_term: false
+  }
+}
+# batch normalization deconv1
+layer {
+  name: "deconv1_bn"
+  type: "BatchNorm"
+  bottom: "deconv1"
+  top: "deconv1_bn"
+  param {
+    decay_mult: 0
+  }
+  param {
+    decay_mult: 0
+  } 
+}
+# prelu layer deconv1
+layer {
+  name: "deconv1_prelu"
+  type: "PReLU"
+  bottom: "deconv1_bn"
+  top: "deconv1_bn"
+  param {
+    decay_mult: 0
+  }
+  prelu_param {
+    filler {
+      value: 0.1
+      type: "constant"
+    }
+  }
+}
+# output layer
+layer {
+  name: "output"
+  type: "Convolution"
+  bottom: "deconv1_bn"
+  top: "output"
+  param { # weight
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param { # bias
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 2
+    kernel_size: 3
+    stride: 1
+    pad: 1
+    weight_filler {
+      type: "msra"
+      variance_norm: FAN_IN
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "loss"
+  type: "Softmax"
+  bottom: "output"
+  top: "prob"
+}
